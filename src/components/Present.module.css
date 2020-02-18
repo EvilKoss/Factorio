@@ -1,0 +1,24 @@
+.rapper {
+	margin: 0 auto;
+	display: grid;
+	width: 90%;
+
+	grid-template-areas:
+	"left right";
+	grid-auto-columns: 1fr 1fr;
+
+}
+
+.left {
+	grid-area: left;
+	text-align: left;
+	margin: 10px;
+}
+.right {
+	grid-area: right;
+	text-align: right;
+	margin: 10px;
+}
+.center {
+	text-align: center;
+}

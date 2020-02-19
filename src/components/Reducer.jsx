@@ -18,7 +18,7 @@ const CHANGEMINSTONE = 'CHANGEMINSTONE';
 
 
 const initialState = {
-	resources:{copper:150,metal:150,coal:15,stone:20,copperPlate:1,metalPlate:2,stoneBrick:3},
+	resources:{copper:50,metal:150,coal:15,stone:120,copperPlate:1,metalPlate:2,stoneBrick:3},
 	buldings:{furnaceCopper:1,furnaceMetal:2,furnaceStone:3,minerCopper:4,minerMetal:5,minerCoal:6,minerStone:0,}
 }
 

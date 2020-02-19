@@ -11,8 +11,6 @@ const Present = (props) => {
 	const minerCoal = props.build.minerCoal;
 	const minerStone = props.build.minerStone;
 
-	const dsag = "кнопка не активная если не хватает ресурсов";
-
 	const copper = props.res.copper;
 	const metal = props.res.metal;
 	const coal = props.res.coal;
@@ -21,12 +19,20 @@ const Present = (props) => {
 	const metalPlate = props.res.metalPlate;
 	const stoneBrick = props.res.stoneBrick;
 
-	const sale = false;
+	let sale = false;
 
-	// if (metal < 50 && copper < 50){
-	// 	return sale = true;
-	// }
-	// else{sale = false};
+	if (metal < 50 || copper < 50){
+		sale = true;
+	}
+	else{sale = false};
+
+
+	let saleFur = false;
+
+	if (metal < 50 || stone < 50){
+		saleFur = true;
+	}
+	else{saleFur = false};
 
 
 	const buyMinerCopper = () => {
@@ -53,14 +59,57 @@ const Present = (props) => {
 		props.BuyFurnaceStone(stone-50,metal-50,furnaceStone+1);
 	}
 
-	const time = () => {
-		const quantityCopper = copper + minerCopper;
-		const quantityMetal = metal + minerMetal;
-		const quantityCoal = (coal + minerCoal)-(furnaceCopper+furnaceMetal+furnaceStone);
-		const quantityStone = stone + minerStone;
-		const quantityCopperPlate = copperPlate + furnaceCopper;
-		const quantityMetalPlate = metalPlate + furnaceMetal;
-		const quantityStoneBrick = stoneBrick + furnaceStone;
+
+	let quantityCopper = copper;
+	let quantityCopperPlate = copperPlate;
+	let furnaceCopperCoal = 0;
+
+	let quantityMetal = metal;
+	let quantityMetalPlate = metalPlate;
+	let furnaceMetalCoal = 0;
+
+	let quantityStone = stone;
+	let quantityStoneBrick = stoneBrick;
+	let furnaceStoneCoal = 0;
+
+
+	const time = () => {// проверять ни уходит ли она в минус, если ушла то останавливать производство
+		if((copper + minerCopper)-furnaceCopper > 0 && coal >= furnaceCopper){
+			quantityCopper = (copper + minerCopper)-furnaceCopper;
+			quantityCopperPlate = copperPlate + furnaceCopper;
+			furnaceCopperCoal = furnaceCopper;
+		}
+		else {
+			quantityCopper = (copper + minerCopper);
+			quantityCopperPlate = copperPlate;
+			furnaceCopperCoal = 0;
+		}
+
+		if((metal + minerMetal)-furnaceMetal > 0 && coal >= furnaceMetal){
+			quantityMetal = (metal + minerMetal)-furnaceMetal;
+			quantityMetalPlate = metalPlate + furnaceMetal;
+			furnaceMetalCoal = furnaceMetal;
+		}
+		else {
+			quantityMetal = (metal + minerMetal);
+			quantityMetalPlate = metalPlate;
+			furnaceMetalCoal = 0;
+		}
+
+		if((stone + minerStone)-furnaceStone > 0 && coal >= furnaceStone){
+			quantityStone = (stone + minerStone)-furnaceStone;
+			quantityStoneBrick = stoneBrick + furnaceStone;
+			furnaceStoneCoal = furnaceStone;
+		}
+		else {
+			quantityStone = (stone + minerStone);
+			quantityStoneBrick = stoneBrick;
+			furnaceStoneCoal = 0;
+		}
+
+
+		const quantityCoal = (coal + minerCoal)-(furnaceCopperCoal+furnaceMetalCoal+furnaceStoneCoal);
+
 
 		props.Time(quantityCopper,quantityMetal,quantityCoal,quantityStone,quantityCopperPlate,
 			quantityMetalPlate,quantityStoneBrick);
@@ -75,23 +124,23 @@ const Present = (props) => {
 					<button disabled={sale} onClick={buyMinerCopper}>купить:50медь,50Сталь</button>
 				</div>
 				<div>Шахта метала: {minerMetal}шт
-					<button onClick={buyMinerMetal}>купить:50медь,50Сталь</button>
+					<button disabled={sale} onClick={buyMinerMetal}>купить:50медь,50Сталь</button>
 				</div>
-				<div>Шахта каменая: {minerStone}шт
-					<button onClick={buyMinerStone}>купить:50медь,50Сталь</button>
+				<div>Шахта каменная: {minerStone}шт
+					<button disabled={sale} onClick={buyMinerStone}>купить:50медь,50Сталь</button>
 				</div>
 				<div>Шахта угольная: {minerCoal}шт
-					<button onClick={buyMinerCoal}>купить:50медь,50Сталь</button>
+					<button disabled={sale} onClick={buyMinerCoal}>купить:50медь,50Сталь</button>
 				</div><br/>
 
-				<div onClick={buyFurCopper}>Печь медная: {furnaceCopper}шт
-					<button>купить:50Сталь,50Камень</button>
+				<div>Печь медная: {furnaceCopper}шт
+					<button disabled={saleFur} onClick={buyFurCopper}>купить:50Сталь,50Камень</button>
 				</div>
-				<div onClick={buyFurMetal}>Печь метала: {furnaceMetal}шт
-					<button>купить:50Сталь,50Камень</button>
+				<div>Печь металла: {furnaceMetal}шт
+					<button disabled={saleFur} onClick={buyFurMetal}>купить:50Сталь,50Камень</button>
 				</div>
-				<div onClick={buyFurStone}>Печь каменая: {furnaceStone}шт
-					<button>купить:50Сталь,50Камень</button>
+				<div>Печь каменная: {furnaceStone}шт
+					<button disabled={saleFur} onClick={buyFurStone}>купить:50Сталь,50Камень</button>
 				</div><br/>
 
 				<div>
@@ -107,8 +156,8 @@ const Present = (props) => {
 				<div>Камень: {stone}</div>
 
 				<div>Медная плита: {copperPlate}</div>
-				<div>Сталая плита: {metalPlate}</div>
-				<div>Каменый блок: {stoneBrick}</div>
+				<div>Стальная плита: {metalPlate}</div>
+				<div>Каменный блок: {stoneBrick}</div>
 			</div>
 
 
